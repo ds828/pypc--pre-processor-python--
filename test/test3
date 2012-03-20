@@ -76,8 +76,8 @@
 
 /* test unavaliable value == value */
 	//	#define VALUE1 12
-	//	#define 9_VALUE 13
-	//	#ifdef VALUE1 < 9_VALUE
+	//	#define VALUE2 13
+	//	#ifdef VALUE1 < VALUE2
 		if block: You should see me
 	//	#<< VALUE1
 	//	#<< VALUE2

@@ -1186,9 +1186,12 @@ def do_preprocess(options):
 	
 	#process global.def first
 	global_def_fullpath = options["global"]
+	print "======>> using global file = %s" % global_def_fullpath
 	if os.path.exists(global_def_fullpath):
 		filename = os.path.split(global_def_fullpath)[1]
 		_processfile(global_def_fullpath,os.path.join(options["todir"],filename))
+	else:
+		print "======>> fail to find global file = %s\r\n======>> skip it....going on" % global_def_fullpath
 	
 	_preprocess(options["srcdir"])
 
@@ -1263,6 +1266,7 @@ def main():
 	
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "s:d:ei:m:")
+
 		if not opts or '-s' not in map(lambda x:x[0],opts):
 			usage()
 			sys.exit(2)
@@ -1272,14 +1276,13 @@ def main():
 		usage()
 		sys.exit(2)
 	 
-	py_file= os.path.abspath(__file__) 
-	base_dir = os.path.dirname(py_file)
+	base_dir = os.getcwd()
 
 	options = {
-				"srcidr" : base_dir,
-				"todir"	: os.path.join(base_dir,"done"),
-				"global" : os.path.join(base_dir,"global.def"),
-			}
+					"srcdir" : base_dir,
+					"todir"	: os.path.join(base_dir ,"done"),
+					"global" : os.path.join(base_dir,"global.def")
+				}
 	for opt,arg in opts:
 		
 		if opt == '-s':
@@ -1302,7 +1305,7 @@ def main():
 				options["global"] = os.path.join(base_dir,arg)
 		elif opt == "-m":
 			options["comment"] = arg
-					
+							
 	do_preprocess(options)
 
 	return 0
