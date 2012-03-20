@@ -1,0 +1,50 @@
+/* test for bool value is true */
+	//	#define BOOL TRUE
+	//	#ifdef BOOL
+	//	#<< BOOL
+			if block: You should see me
+	//	#else
+			else block: BOOL is NOT TRUE
+	//	#endif
+
+/* test for bool value is false */
+	//	#define BOOL False
+	//	#ifdef BOOL
+			if block
+	//	#else
+	//	#<< BOOL
+		else block: You should see me
+	//	#endif
+
+/* test for bool value is true and ifndef */
+	//	#define BOOL true
+	//	#ifndef BOOL
+			if block:
+	//	#else
+	//	#<< BOOL
+			else block: You should see me
+	//	#endif
+
+/* test for sub ifblock */
+	//	#define BOOL false
+	//	#define BOOL2 True
+	//	#ifndef BOOL
+	//	#<< BOOL
+	//	  #ifdef BOOL2
+	//	#<< BOOL2
+		  sub else block: You should see me
+	//	  #endif
+	//	#else
+		else block:
+	//	#endif
+
+/* test for value != value */
+	//	#define BOOL1 false
+	//	#define BOOL2 True
+	//	#ifdef BOOL1 != BOOL2
+			if block: You should see me
+	//	#<< BOOL1
+	//	#<< BOOL2
+	//	#else
+			else block:
+	//	#endif

@@ -1,0 +1,51 @@
+/* if/else nesting */
+	//	#define VALUE_1 "value_1"	 
+	//	#define VALUE_2 "value 2"
+	
+/* if sub_if*/
+
+	//	#ifdef VALUE_1
+		if block: You should see me
+	//		#<< VALUE_1
+	//		#ifdef VALUE_2
+				sub if block: You should see me
+	//			#<< VALUE_2			
+	//		#endif	
+	//	#endif
+		
+/* if sub_else*/
+ 
+	//	#ifdef VALUE_1
+		if block: You should see me
+	//		#<< VALUE_1
+	//		#ifndef VALUE_3
+				sub if block:
+	//		#else
+				sub else block: You should see me
+	//		#endif	
+	//	#endif	
+
+/* else sub_if */
+
+	//	#ifdef VALUE_3
+		if block:
+	//	#else
+		else block: You should see me
+	//		#ifdef VALUE_2
+				sub if block: You should see me
+	//			#<< VALUE_2			
+	//		#endif	
+	//	#endif	
+
+/* else sub_else */
+
+	//	#ifdef VALUE_3
+		if block:
+	//	#else
+		else block: You should see me
+	//		#ifdef VALUE_4
+				sub if block:
+	//		#else
+				sub else block: You should see me
+	//		#endif	
+	//	#endif

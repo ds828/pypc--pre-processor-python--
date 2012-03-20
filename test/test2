@@ -1,0 +1,70 @@
+/* test string == */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE == "ONE STRING"
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: VALUE
+	//	#<< VALUE
+	//	#endif	
+
+/* test string != */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE != "other STRING"
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: VALUE
+	//	#<< VALUE
+	//	#endif	
+
+/* test string >= */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE >= "other STRING"
+		if block: VALUE
+	//	#<< VALUE
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE
+	//	#endif
+
+/* test string > */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE > "other STRING"
+		if block: VALUE
+	//	#<< VALUE
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE
+	//	#endif
+
+/* test string <= */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE <= "other STRING"
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: VALUE
+	//	#<< VALUE
+	//	#endif
+
+/* test string < */
+	//	#define VALUE "ONE STRING"
+	//	#ifdef VALUE < "other STRING"
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: VALUE
+	//	#<< VALUE
+	//	#endif
+
+/* test string value == value */
+	//	#define VALUE1 "STRING_01"
+	//	#define VALUE2 "STRING_02"
+	//	#ifdef VALUE1 == VALUE2
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#endif

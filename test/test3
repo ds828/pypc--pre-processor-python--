@@ -1,0 +1,86 @@
+/* test int == */
+	//	#define VALUE 10
+	//	#ifdef VALUE == 10
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+
+/* test int != */
+	//	#define VALUE 10
+	//	#ifdef VALUE != 9
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+	
+/* test int >= */
+	//	#define VALUE1 10
+	//	#define VALUE2 5
+	//	#ifdef VALUE1 >= VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+
+/* test int <= */
+	//	#define VALUE1 25
+	//	#define VALUE2 15
+	//	#ifdef VALUE1 <= VALUE2
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#endif
+
+/* test int > */
+	//	#define VALUE1 35
+	//	#define VALUE2 45
+	//	#ifdef VALUE1 > VALUE2
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#endif
+	
+/* test int < */
+	//	#define VALUE1 12
+	//	#define VALUE2 13
+	//	#ifdef VALUE1 < VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif
+
+/* test int == string */
+	//	#define VALUE1 12
+	//	#define VALUE2 "a13"
+	//	#ifdef VALUE1 < VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif
+
+/* test unavaliable value == value */
+	//	#define VALUE1 12
+	//	#define 9_VALUE 13
+	//	#ifdef VALUE1 < 9_VALUE
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif

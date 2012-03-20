@@ -1,0 +1,12 @@
+/** global.def 
+	-- It will be loaded firstly when the preporcessor run.
+	-- You can define some global variables in this file.
+	-- Of course, you also can define the local variable in it, BUT these local variables only can be accessed in the namespace of the global.def, namely, only in the "golbal.def"
+**/
+
+	// #define global t_1 True
+	// #define global s_1 "global string"
+	// #define global i_1 999
+	// #define global f_1 99.99
+	
+	// #define local_1 "local string"

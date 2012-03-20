@@ -1,0 +1,5 @@
+/* test Syntax Check */
+
+	// #ifdef value
+		// #ifdef XXX
+			// #else

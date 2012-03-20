@@ -1,0 +1,71 @@
+/* test ifdef/ifndef key*/
+/* ifdef boolean */
+	//	#define DEBUG TRUE
+	//	#ifdef DEBUG	
+		if block: You should see me
+	//	#<< DEBUG	
+	//	#else	
+		else block: 
+	//	#endif
+
+/* ifndef boolean */
+	//	#ifndef DEBUG
+		if block: 
+	//	#else	
+		else block:You should see me 
+	//	#endif
+	
+/* ifdef int */
+	//	#define INT 100	
+	//	#ifdef INT	
+		if block: You should see me
+	//	#<< INT	
+	//	#else	
+		else block: 
+	//	#endif
+	
+/* ifndef int */
+	//	#ifndef INT
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#endif	
+	
+/* ifdef float */
+	//	#define FLOAT 100.4	
+	//	#ifdef FLOAT	
+		if block: You should see me
+	//	#<< FLOAT	
+	//	#else	
+		else block: 
+	//	#endif	
+
+/* ifndef float */
+	//	#ifndef FLOAT	
+		if block:
+	//	#else	
+		else block:  You should see me
+	//	#endif	
+
+/* ifdef string */
+	//	#define STR "string"
+	//	#ifdef STR	
+		if block: You should see me
+	//	#<< STR	
+	//	#else	
+		else block: 
+	//	#endif	
+
+/* ifndef string */
+	//	#ifndef STR
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#endif	
+
+/* ifdef key which does NOT exist */
+	//	#ifndef XXXOOO
+		if block: You should see me
+	//	#else	
+		else block:
+	//	#endif

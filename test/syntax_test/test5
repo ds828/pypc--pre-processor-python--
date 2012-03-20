@@ -1,0 +1,8 @@
+/* test Syntax Check */
+
+	// #define value True
+	// #ifdef value
+		if block:
+	// #else
+	// #endif
+	// #endif

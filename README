@@ -1,0 +1,56 @@
+-- Features
+
+Basically, It can do a preprocess work for any text files, such as code and plaint text, whatever. of course, it is more valuable for processing the code files.
+
+And, it supports boolean, integer, float and string data types. and support syntax check as well.
+
+-- The specification of the files it supports:
+
+The file should have a character or a string for a single line comment. such as "//" for java, "#" for linux shell script.
+
+-- What it can do
+
+Simple example of a preprocess statement
+
+         //     #define BOOL_VALUE  True   
+         //     #define INT_VALUE  123   
+         //     #ifdef BOOL_VALUE       
+                something here when BOOL_VALUE is TRUE
+                //      #ifdef INT_VALUE == 123
+						sub if block:
+                        // #<< INT_VALUE 
+                //      #else   
+                        INT_VALUE is NOT 123
+                //      #endif  
+        //      #else   
+                BOOL_VALUE is NOT TRUE
+        //      #endif  
+
+After preprocessing, we can get the code below:
+
+                something here with BOOL_VALUE is TRUE
+						sub if block:
+                        // INT_ VALUE == 123
+
+-- How to run
+
+    Command Line:
+
+    python pypc.py -s srcfile [-d destdir [-e [-i initfile [-m comment ]]]]
+
+        -s Source file or directory.
+        -d Destination file or directory.
+        -e flag for export, setting -e to export a code version with the parameters you set. Or just comment the useless code, which is easy to debug your code, because the line number of code file will not be changed after preprocessing.
+        -i Define a initial file, this file will be loaded firstly. The default name of init file is "global.def". You can define some global variables in this file.
+        -m Define yourself mark for comment. The default is "#". 
+
+-- More detail
+
+	
+
+-- Brother project
+	If you like to user these futures with Java, please see my another project.
+	http://code.google.com/p/pre-processor-java/
+
+-- created by Di SONG
+-- songdi19@gmail.com

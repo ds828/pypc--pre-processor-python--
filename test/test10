@@ -1,0 +1,46 @@
+/* test global.def */
+
+	// #<< t_1
+	
+	// #define s_1 "test10 string"
+	// #<< global s_1
+	// #<< s_1
+	
+	// #<< i_1
+	// #<< f_1
+	
+/* test refer global variables */
+
+	// #ifdef global t_1
+		if block: You should see me
+		// #<< global t_1
+	// #else
+		else block:
+	// #endif
+	
+	// #ifdef global s_1 == s_1
+		if block: 
+	// #else
+		else block: You should see me
+		// #<< global s_1
+		// #<< s_1
+	// #endif
+
+	// #ifdef global i_1 > 0
+		if block: You should see me
+		// #<< global i_1
+	// #else
+		else block:
+	// #endif
+
+	// #ifndef global f_1 < 0
+		if block: You should see me
+		// #<< global f_1
+	// #else
+		else block:
+	// #endif
+
+/* -- Only can access global varibles which are in the "global.def" */
+	
+	access local_1, a KeyError exception will be raised
+	// #<< local_1

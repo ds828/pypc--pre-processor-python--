@@ -1,0 +1,86 @@
+/* test float == */
+	//	#define VALUE 10.1
+	//	#ifdef VALUE == 10.1
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+
+/* test float != */
+	//	#define VALUE 10.1
+	//	#ifdef VALUE != 9.2
+		if block: You should see me
+	//	#<< VALUE
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+	
+/* test float >= */
+	//	#define VALUE1 10.5
+	//	#define VALUE2 5.2
+	//	#ifdef VALUE1 >= VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#<< VALUE
+	//	#endif
+
+/* test float <= */
+	//	#define VALUE1 25.4
+	//	#define VALUE2 15.3
+	//	#ifdef VALUE1 <= VALUE2
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#endif
+
+/* test float > */
+	//	#define VALUE1 35.6
+	//	#define VALUE2 45.7
+	//	#ifdef VALUE1 > VALUE2
+		if block: 
+	//	#else	
+		else block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#endif
+	
+/* test float < */
+	//	#define VALUE1 12.1
+	//	#define VALUE2 13.2
+	//	#ifdef VALUE1 < VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif
+
+/* test float == string */
+	//	#define VALUE1 12.1
+	//	#define VALUE2 "a13"
+	//	#ifdef VALUE1 < VALUE2
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif
+
+/* test unavaliable value == value */
+	//	#define VALUE1 12.2
+	//	#define 9_VALUE 13.3
+	//	#ifdef VALUE1 < 9_VALUE
+		if block: You should see me
+	//	#<< VALUE1
+	//	#<< VALUE2
+	//	#else	
+		else block: 
+	//	#endif

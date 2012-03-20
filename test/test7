@@ -1,0 +1,23 @@
+/* global define/define */
+	
+	//	#define global VALUE "global"					   
+	
+	//	#ifdef VALUE	
+		if block: You should see me
+		// #<< VALUE
+	//	#endif
+	
+	// #define VALUE "local" 
+	
+	// #ifdef VALUE == "local"	
+		if block: You should see me
+		// #<< VALUE
+	// #else
+		else block:
+	// #endif
+
+
+	// #ifdef global VALUE == "global"	
+		if block: You should see me
+		// #<< global VALUE
+	//	#endif
