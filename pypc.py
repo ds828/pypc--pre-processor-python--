@@ -796,13 +796,15 @@ class IfdefProcessor(TagProcessor):
 			and_express_list = and_express.split("and")
 			and_result = True
 			for express in and_express_list:
-				express = express.strip()
+				express = express.strip("\r\n\t ")
 				parser = ExpressSelector.getExpressProcessor(express)
 				if parser:
 					result = parser.processExpress(express)
 					if not result:
 						and_result = False
 						break # jump out and loop
+				else:
+					raise SyntaxError, " %s is a illegale express" % express
 			if and_result:
 				or_result = True
 				break # jump out or loop
@@ -1125,6 +1127,19 @@ class SyntaxCheck(object):
     
 	def __check_ifdef_ifndef(self,token):
 		
+		if "#ifdef" in self.__current_line:
+			index = self.__current_line.find("#ifdef")
+			or_express_list = self.__current_line[index + 6:].split("or")
+		elif "#ifndef" in self.__current_line:
+			index = self.__current_line.find("#ifndef")
+			or_express_list = self.__current_line[index + 7:].split("or")
+			
+		for and_express in or_express_list:
+			express_list = and_express.split("and")
+			for express in express_list:
+				express = express.strip("\r\n\t ")
+				if not ExpressSelector.getExpressProcessor(express):
+					raise SyntaxError, self.__create_exception_string(" Illegale Express = %s" % express)
 		self.__token_stack.append(token)
         
 	def __check_else(self,token):

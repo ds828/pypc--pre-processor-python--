@@ -16,3 +16,19 @@
 ##else
 	else block: 
 ##endif
+
+
+/* ##ifdef global s == global s */
+##ifdef global s == s and global i == global i or XXOO $)a
+	if block: you should see me
+##else
+	else block: 
+##endif
+
+
+/* ##ifdef global s == global s */
+##ifndef global s == s or global i == global i and XXOO $)a
+	if block: you should see me
+##else
+	else block: 
+##endif
