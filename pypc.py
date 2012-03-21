@@ -1006,8 +1006,6 @@ class TagSelector(object):
 					"^\\s*" + comment + "\\s*#.+\\s*$"
 					)
 				
-		print len(__str_pattern_tuple)
-				
 		cls.__compile_list = map(lambda x: re.compile(x),__str_pattern_tuple)
 			
 	@classmethod
