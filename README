@@ -1,12 +1,10 @@
 -- Features
 
-Basically, It can do a preprocess work for any text files, such as code and plaint text, whatever. of course, it is more valuable for processing the code files.
-
-And, it supports boolean, integer, float and string data types. and support syntax check as well.
+Basically, The pypc can do a preprocess work for any text files, such as mulit-programming language code and plaint text, whatever. of course, it is more valuable for processing the code files. And, it supports boolean, integer, float and string data types,if-else statement and logic caculation for expression. And supports syntax check as well. 
 
 -- The specification of the files it supports:
 
-The file should have a character or a string for a single line comment. such as "//" for java, "#" for linux shell script.
+The file should have a character or a string for a single line comment. such as "//" for java, "#" for linux shell script.So we can say, whatever programming language, if it has a single line comment, it can use the pypy.
 
 -- What it can do
 
