@@ -1,0 +1,18 @@
+##define global s "string"
+##define s "string"
+##define global i 100
+##define i 100
+/* ##ifdef global s == s and global i == i */
+##ifdef global s == s and global i == i
+	if block: you should see me
+##else
+	else block: 
+##endif
+
+
+/* ##ifdef global s == global s */
+##ifdef global s == s and global i == global i
+	if block: you should see me
+##else
+	else block: 
+##endif

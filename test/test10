@@ -43,4 +43,4 @@
 /* -- Only can access global varibles which are in the "global.def" */
 	
 	access local_1, a KeyError exception will be raised
-	// #<< local_1
+	??// #<< local_1

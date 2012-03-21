@@ -18,7 +18,7 @@
 	//	#ifdef VALUE_1
 		if block: You should see me
 	//		#<< VALUE_1
-	//		#ifndef VALUE_3
+	//		#ifdef VALUE_3
 				sub if block:
 	//		#else
 				sub else block: You should see me

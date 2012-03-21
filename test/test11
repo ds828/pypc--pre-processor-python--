@@ -1,0 +1,110 @@
+##define b true
+##define i 100
+##define f 200.19
+##define s "string"
+
+##define global b true
+##define global i 100
+##define global f 200.19
+##define global s "string"
+
+# #define b true
+# #define i 100
+# #define f 200.19
+# #define s "string"
+
+/* ##ifdef global b == true and b == False */
+##ifdef global b == true and b == False
+##else
+	else block: you should see me
+##endif
+
+/* ##ifdef global b == true or b == False */
+##ifdef global b == true or b == False
+	if block: you should see me
+##endif
+
+/* ##ifdef global b == true and b == True */
+##ifdef global b == true and b == True
+	if block: you should see me
+##endif
+
+/* ##ifdef global f == 200.19 and f == 100.19 */
+##ifdef global f == 200.19 and f == 100.19
+##else
+	else block: you should see me
+##endif
+
+/* ##ifdef global f != 200.19 or f != 200.19 */
+##ifdef global f == 200.19 or f != 200.19
+	if block: you should see me
+##endif
+
+/* ##ifdef global f != 200.19 or f == 200.19 */
+##ifdef global f != 200.19 or f == 200.19
+	if block: you should see me
+##else
+##endif
+
+
+/* ##ifdef global i == 100 and i == 100 */
+##ifdef global  i == 100 and i == 100
+	if block: you should see me
+##else
+	else block:
+##endif
+
+/* ##ifdef global i == 100 and i != 100 */
+##ifdef global  i == 100 and i != 100
+	if block: 
+##else
+	else block: you should see me
+##endif
+
+/* ##ifdef global i != 100 and i != 100 */
+##ifdef global  i != 100 and i != 100
+	if block: 
+##else
+	else block: you should see me
+##endif
+
+/* ##ifdef global i == 100 or i == 100 */
+##ifdef global i == 100 or i == 100
+	if block: you should see me
+##endif
+
+/* ##ifdef global i != 100 or i == 100 */
+##ifdef global i != 100 or i == 100 and b
+	if block: you should see me
+##else
+##endif
+
+/* ##ifdef global s == "string" and s == "string" */
+##ifdef global s == "string" and s == "string"
+	if block: you should see me
+##else
+##endif
+
+/* ##ifdef global s != "string" and s == "string" */
+##ifdef global s != "string" and s == "string"
+	if block: 
+##else
+	else block: you should see me
+##endif
+
+
+/* ##ifdef global s == "string" or s == "string" */
+##ifdef global s == "string" or s == "string"
+	if block: you should see me
+##else
+	else block:
+##endif
+
+
+/* ##ifdef global s == "string" or s != "string" */
+##ifdef global s == "string" or s != "string"
+	if block: you should see me
+##else
+	else block: 
+##endif
+

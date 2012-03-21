@@ -62,25 +62,3 @@
 	//	#else	
 		else block: 
 	//	#endif
-
-/* test float == string */
-	//	#define VALUE1 12.1
-	//	#define VALUE2 "a13"
-	//	#ifdef VALUE1 < VALUE2
-		if block: You should see me
-	//	#<< VALUE1
-	//	#<< VALUE2
-	//	#else	
-		else block: 
-	//	#endif
-
-/* test unavaliable value == value */
-	//	#define VALUE1 12.2
-	//	#define VALUE2 13.3
-	//	#ifdef VALUE1 < VALUE2
-		if block: You should see me
-	//	#<< VALUE1
-	//	#<< VALUE2
-	//	#else	
-		else block: 
-	//	#endif

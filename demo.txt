@@ -1,0 +1,7 @@
+	# #define my_string "Hello pypc"
+	# #ifdef my_string
+               if block: your codes or something
+	# #<< my_string
+	# #else
+	       else block: your codes or somthing
+	# #endif

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#       preprocess.py
+#       pypc.py
 #       
-#       Copyright 2011 Di SONG <di@di-t60>
+#       Copyright 2011 Di SONG <di@di-dibian>
 #       
 #       This program is free software; you can redistribute it and/or modify
 #       it under the terms of the GNU General Public License as published by
@@ -183,6 +183,13 @@ def isBool(value):
 class Parser(object):
 	"""A base class for all express parser"""
 	
+	def processExpress(self,express):
+		express_tuple = self.parseExpress(express)
+		if express_tuple:
+			return self.checkExpress(express_tuple)
+			
+		return False
+	
 	def parseExpress(self, express):
 		return None
 	
@@ -198,255 +205,281 @@ class Parser(object):
 class DefineGlobalBooleanParser(Parser):
 	'''# #define global BOOL TRUE'''
 	
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		
+		index = statement.find("global")
+		express = statement[index+6:].strip()
 		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4].lower() 
+		if len(express_list) == 2:
+			value = express_list[1].lower() 
 			if value == "true":
-				express_list[4] = True
+				express_list[1] = True
 			elif value == "false":
-				express_list[4] = False
+				express_list[1] = False
 			else:
-				raise TypeError, "[ %s ] must be a Boolean Type" % (express_list[4])
+				raise TypeError, "[ %s ] must be a Boolean Type" % (value)
 				
-			return tuple(express_list[3:])
+			return tuple(express_list)
 		else:
 			return None
 
 class DefineGlobalIntegerParser(Parser):
 	'''# #define global INT 123'''
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		
+		index = statement.find("global")
+		express = statement[index+6:].strip()
 		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4]
+		if len(express_list) == 2:
+			value = express_list[1]
 			if isInteger(value):
-				express_list[4] = int(value)
+				express_list[1] = int(value)
 			else:
 				raise TypeError, "[ %s ] must be a Integer Type" % (value)
 
-			return tuple(express_list[3:])
+			return tuple(express_list)
 		else:
 			return None
 			
 class DefineGlobalFloatParser(Parser):
 	'''# #define global FLOAT 123'''
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		index = statement.find("global")
+		express = statement[index+6:].strip()
 		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4]
+		if len(express_list) == 2:
+			value = express_list[1]
 			if isFloat(value):
-				express_list[4] = float(value)
+				express_list[1] = float(value)
 			else:
 				raise TypeError, "[ %s ] must be a Float Type" % (value)
 
-			return tuple(express_list[3:])
+			return tuple(express_list)
 		else:
 			return None			
 
 
 class DefineGlobalStringParser(Parser):
 	'''# #define global str "I am a string" '''
-	def parseExpress(self, express):
-		express_list = express.split(None, 4)
-		if len(express_list) == 5:
-			return (express_list[3], express_list[4].strip('"\r\n\t '))
+	def parseExpress(self, statement):
+		index = statement.find("global")
+		express = statement[index+6:].strip()
+		express_list = express.split(None, 1)
+		if len(express_list) == 2:
+			return (express_list[0], express_list[1].strip('"\r\n\t '))
 		else:
 			return None
 			
 class DefineBooleanParser(Parser):
 	'''# #define BOOL TRUE'''
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		
+		index = statement.find("#define")
+		express = statement[index+7:].strip()
 		express_list = express.split()
-		if len(express_list) == 4:
-			value = express_list[3].lower() 
+		if len(express_list) == 2:
+			value = express_list[1].lower() 
 			if value == "true":
-				express_list[3] = True
+				express_list[1] = True
 			elif value == "false":
-				express_list[3] = False
+				express_list[1] = False
 			else:
-				raise TypeError, "[ %s ] must be a Boolean Type" % (express_list[3])
+				raise TypeError, "[ %s ] must be a Boolean Type" % (value)
 				
-			return tuple(express_list[2:])
+			return tuple(express_list)
 		else:
 			return None
 
 class DefineIntegerParser(Parser):
 	'''# #define INT 123'''
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		index = statement.find("#define")
+		express = statement[index+7:].strip()
 		express_list = express.split()
-		if len(express_list) == 4:
-			value = express_list[3]
+		if len(express_list) == 2:
+			value = express_list[1]
 			if isInteger(value):
-				express_list[3] = int(value)
+				express_list[1] = int(value)
 			else:
 				raise TypeError, "[ %s ] must be a Integer Type" % (value)
 
-			return tuple(express_list[2:])
+			return tuple(express_list)
 		else:
 			return None
 			
 class DefineFloatParser(Parser):
 	'''# #define FLOAT 123'''
-	def parseExpress(self, express):
+	def parseExpress(self, statement):
+		
+		index = statement.find("#define")
+		express = statement[index+7:].strip()
 		express_list = express.split()
-		if len(express_list) == 4:
-			value = express_list[3]
+		if len(express_list) == 2:
+			value = express_list[1]
 			if isInteger(value):
-				express_list[3] = float(value)
+				express_list[1] = float(value)
 			else:
 				raise TypeError, "[ %s ] must be a Float Type" % (value)
 
-			return tuple(express_list[2:])
+			return tuple(express_list)
 		else:
 			return None	
 
 class DefineStringParser(Parser):
 	'# #define str "I am a string"'
-	def parseExpress(self, express):
-		express_list = express.split(None, 3)
-		if len(express_list) == 4:
-			return (express_list[2], express_list[3].strip('"\r\n\t '))
+	def parseExpress(self, statement):
+		
+		index = statement.find("#define")
+		express = statement[index+7:].strip()
+		express_list = express.split(None, 1)
+		if len(express_list) == 2:
+			return (express_list[0], express_list[1].strip('"\r\n\t '))
 		else:
 			return None
 
 class ValueParser(Parser):
 	'''
-	# #ifdef value1 == value2
-	'''
-	_get_define_method = ContextManager().getDefineValue
-	
-	def parseExpress(self, express):
-
-		express_list = express.split()
-		if len(express_list) == 5:
-			right = express_list[4]
-			express_list[4] = self.__class__._get_define_method(right)
-			return tuple(express_list[2:])
-		else:	
+	 value1 == value2
+	 global v1 == v2
+	 global v1 == global v2
+	'''	
+	def parseExpress(self, statement):
+		"""
+		it is deiierent with other parsers
+		the return is to replace right variable with tis value
+		"""
+		express_list = statement.split()
+		express_length = len(express_list)
+		if express_length == 3:
+			# value1 == value2
+			left = express_list[2]
+			value = ContextManager().getDefineValue(left)
+			express_list[2] = value
+		
+		elif express_length == 4:
+			# global value1 == value2
+			left = express_list[3]
+			value = ContextManager().getDefineValue(left)
+			express_list[3] = value
+		
+		elif express_length == 5:
+			# global value1 == global value2
+			left = express_list[4]
+			value = ContextManager().getGlobalDefine(left)
+			express_list[3] = ""
+			express_list[4] = value
+		
+		else:
 			return None
+			
+		return express_list
 	
 	def checkExpress(self, express):
 		
-		right_value = express[2]
+		right_value = express[-1]
 		right_type = type(right_value)
 		
+		express = " ".join(map(lambda x:str(x),express))
+		
 		if right_type is BooleanType:
-			return BooleanParser().checkExpress(express)
+			return BooleanParser().processExpress(express)
 		elif right_type is IntType:
-			return IntegerParser().checkExpress(express)
+			return IntegerParser().processExpress(express)
 		elif right_type is FloatType:
-			return FloatParser().checkExpress(express)
+			return FloatParser().processExpress(express)
 		elif right_type is StringType:
-			return StringParser().checkExpress(express)
+			return StringParser().processExpress(express)
 		else:
 			return False
-		
-class GlobalValueParser(ValueParser):
-	'''
-	parse sample: # #ifdef global value1 == value2
-	'''
-	_get_define_method = ContextManager().getGlobalDefine
+				
+class BooleanParser(Parser):
+	"""
+	key == true
+	global key == false
+	"""
 	
 	def parseExpress(self, express):
 
 		express_list = express.split()
-		if len(express_list) == 6:
-			right = express_list[5]
-			express_list[5] = self.__class__._get_define_method(right)
-			return tuple(express_list[3:])
-		else:	
-			return None		
-			
-class BooleanParser(Parser):
-	'''
-	parse sample: # #ifdef key == true
-	'''
-	_get_define_method = ContextManager().getDefineValue
-
-	def parseExpress(self, express):
-		'''
-		return a tuple or none
-		'''
-		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4].lower() 
-			if value == "true":
-				express_list[4] = True
-			elif value == "false":
-				express_list[4] = False
-			else:
-				raise TypeError, "[ %s ] must be a Boolean Type" % (express_list[4])
-				
-			return tuple(express_list[2:])
+		if express.startswith("global") and len(express_list) == 4:
+			# global key == false
+			express_list = express_list[1:]
+			#now, key == false
+			key = express_list[0]
+			value = ContextManager().getGlobalDefine(key)
+		
+		elif len(express_list) == 3:
+			key = express_list[0]
+			value = ContextManager().getDefineValue(key)
+		
 		else:
 			return None
-	
-	
-	def checkExpress(self, express):
-
-		key = express[0]
-		value = self.__class__._get_define_method(key)
 		
 		if type(value) is not BooleanType:
 			raise TypeError, "[ %s ] must be a Boolean Type" % (key)
+		express_list[0] = value
+				
+		# key == false
+		value = express_list[2].lower() 
+		if value == "true":
+			express_list[2] = True
+		elif value == "false":
+			express_list[2] = False
+		else:
+			raise TypeError, "[ %s ] must be a Boolean Type" % (express_list[2])
+				
+		return tuple(express_list)
 		
+	
+	def checkExpress(self, express):
+
 		if express[1] == "==":
-			return value == express[2]
+			return express[0] == express[2]
 		elif express[1] == "!=":
-			return value != express[2]
+			return express[0] != express[2]
 		else:
 			return False	
-
-class GlobalBooleanParser(BooleanParser):
-	'''
-	# #ifdef global key == true
-	'''
-	
-	_get_define_method = ContextManager().getGlobalDefine
-	
-	def parseExpress(self, express):
-
-		express_list = express.split()
-		if len(express_list) == 6:
-			value = express_list[5].lower() 
-			if value == "true":
-				express_list[5] = True
-			elif value == "false":
-				express_list[5] = False
-			else:
-				raise TypeError, "[ %s ] must be a Boolean Type" % (express_list[5])
-				
-			return tuple(express_list[3:])
-		else:
-			return None
 	
 
 class FloatParser(BooleanParser):
 	'''
-	parese # #define float = 100.99
+	global float = 100.99
+	float = 99.99
 	'''		
-	
-	_get_define_method = ContextManager().getDefineValue
 		
 	def parseExpress(self, express):
+		
 		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4]
-			express_list[4] = float(value)
-			return tuple(express_list[2:])
+		if express.startswith("global") and len(express_list) == 4:
+			# global float == 99.99
+			express_list = express_list[1:]
+			#now, float == 99.99
+			key = express_list[0]
+			value = ContextManager().getGlobalDefine(key)
+			
+		elif len(express_list) == 3:
+			key = express_list[0]
+			value = ContextManager().getDefineValue(key)
+		
 		else:
 			return None
 			
+		if type(value) is not FloatType and type(value) is not IntType:
+			raise TypeError, "[ %s ] must be a Float or Integer Type" % (key)
+		express_list[0] = value
+		
+		#float = 99.99
+		value = express_list[2]
+		express_list[2] = float(value)
+		return tuple(express_list)
+		
+			
 	def checkExpress(self, express):
 
-		key = express[0]
-		left = self.__class__._get_define_method(key)
+		left = express[0]
 		compare = express[1]
 		right = express[2]
 
-		if type(left) is not FloatType:
-			raise TypeError, " [ %s ] must be a Float Type" % (key)
-			
 		if compare == "==":
 			return left == right
 		if compare == "!=":
@@ -462,94 +495,71 @@ class FloatParser(BooleanParser):
 
 		return False
 
-class GlobalFloatParser(FloatParser):
+class IntegerParser(FloatParser):
 	'''
-	# #define global float = 100.99
-	'''		
-	
-	_get_define_method = ContextManager().getGlobalDefine
-	
+	global int == 10
+	int == 10
+	'''
 	def parseExpress(self, express):
+
 		express_list = express.split()
-		if len(express_list) == 6:
-			value = express_list[5]
-			express_list[5] = float(value)
-			return tuple(express_list[3:])
-		else:
-			return None
-
-class IntegerParser(BooleanParser):
-	'''
-	# #ifdef int == 10
-	'''
-	_get_define_method = ContextManager().getDefineValue
-
-	def parseExpress(self, express):
-		express_list = express.split()
-		if len(express_list) == 5:
-			value = express_list[4]
-			express_list[4] = int(value)
-			return tuple(express_list[2:])
-		else:
-			return None
-
-	def checkExpress(self, express):
-
-		key = express[0]
-		left = self.__class__._get_define_method(key)
-		compare = express[1]
-		right = express[2]
-		
-		if type(left) not in [IntType,FloatType]:
-			raise TypeError, " %s must be a Integer or Float Type" % (key)
+		if express.startswith("global") and len(express_list) == 4:
+			# global int == 10
+			express_list = express_list[1:]
+			#now, int == 10
+			key = express_list[0]
+			value = ContextManager().getGlobalDefine(key)
 			
-		if compare == "==":
-			return left == right
-		if compare == "!=":
-			return left != right
-		if compare == ">=":
-			return left >= right
-		if compare == ">":
-			return left > right
-		if compare == "<=":
-			return left <= right
-		if compare == "<":
-			return left < right
-		return False
-
-class GlobalIntegerParser(IntegerParser):
-	'''
-	# #ifdef global int == 10
-	'''
-	_get_define_method = ContextManager().getGlobalDefine
-	
-	def parseExpress(self, express):
-		express_list = express.split()
-		if len(express_list) == 6:
-			value = express_list[5]
-			express_list[5] = int(value)
-			return tuple(express_list[3:])
+		elif len(express_list) == 3:
+			key = express_list[0]
+			value = ContextManager().getDefineValue(key)
+		
 		else:
 			return None
+			
+
+		if type(value) is not IntType and type(value) is not FloatType:
+			raise TypeError, "[ %s ] must be a Integer or Float Type" % (key)
+		express_list[0] = value
+		
+		# int == 10
+		value = express_list[2]
+		express_list[2] = int(value)
+		return tuple(express_list)
+
 
 class OnlyKeyParser(Parser):
 	'''
-	# #ifdef key
-	'''
-	_get_define_method = ContextManager().getDefineValue
-	
+	global key
+	key
+	'''	
 	def parseExpress(self, express):
+
 		express_list = express.split()
-		if len(express_list) == 3:
-			return tuple(express_list[2:])
-		else:
+		try:
+			if express.startswith("global") and len(express_list) == 2:
+				# global key
+				express_list = express_list[1:]
+				#now, key
+				key = express_list[0]
+				value = ContextManager().getGlobalDefine(key)
+				
+			elif len(express_list) == 1:
+				key = express_list[0]
+				value = ContextManager().getDefineValue(key)
+			else:
+				return None
+
+			express_list[0] = value
+			return tuple(express_list)
+				
+		except KeyError:
 			return None
 
 	def checkExpress(self, express):
 
 		try:
-			key = express[0]
-			value = self.__class__._get_define_method(key)
+			value = express[0]
 			if type(value) is not BooleanType:
 				return True
 			else:
@@ -557,40 +567,47 @@ class OnlyKeyParser(Parser):
 		except KeyError, e:
 			return False
 
-class GlobalOnlyKeyParser(OnlyKeyParser):
-	'''
-	# #ifdef global key
-	'''
-	_get_define_method = ContextManager().getGlobalDefine
-	
-	def parseExpress(self, express):
-		express_list = express.split()
-		if len(express_list) == 4:
-			return tuple(express_list[3:])
-		else:
-			return None
-
 class StringParser(Parser):
 	'''
-	# #ifdef str == "a string here"
-	'''
-	_get_define_method = ContextManager().getDefineValue
-	
+	global str == "a string here"
+	str == "a string here"
+	'''	
 	def parseExpress(self, express):
-		express_list = express.split(None, 4)
-		if len(express_list) == 5:
-			return (express_list[2], express_list[3], express_list[4].strip('"\r\n\t '))
+		
+		if express.startswith("global"):
+			express_list = express.split(None,3)
+		else:
+			express_list = express.split(None,2)
+			
+		if express.startswith("global") and len(express_list) == 4:
+			# global str == "a string"
+			express_list = express_list[1:]
+			#now, str == "a string"
+			key = express_list[0]
+			value = ContextManager().getGlobalDefine(key)
+			
+		elif len(express_list) == 3:
+			key = express_list[0]
+			value = ContextManager().getDefineValue(key)
 		else:
 			return None
 			
-	def checkExpress(self, express):
+		if type(value) is not StringType:
+			raise TypeError, "[ %s ] must be a String Type" % (key)
 		
-		key = express[0]
-		left = self.__class__._get_define_method(key)
+		express_list[0] = value
+		
+		# str == "a string"
+		express_list[2] = express_list[2].strip('"\r\n\t ')
+		return tuple(express_list)
+			
+	def checkExpress(self, express):
+
+		left = express[0]
 		compare = express[1]
 		right = express[2]
 		result = cmp(left, right)
-		
+				
 		if compare == "==":
 			if result == 0:
 				return True
@@ -629,19 +646,6 @@ class StringParser(Parser):
 		
 		return False
 		
-class GlobalStringParser(StringParser):
-	'''
-	# #ifdef global str == "a string here"
-	'''
-	_get_define_method = ContextManager().getGlobalDefine
-	
-	def parseExpress(self, express):
-		express_list = express.split(None, 5)
-		if len(express_list) == 6:
-			return (express_list[3], express_list[4], express_list[5].strip('"\r\n\t '))
-		else:
-			return None		
-
 #############################################################
 #
 # Define iterator decoration class
@@ -778,15 +782,41 @@ class IfdefProcessor(TagProcessor):
 	'''
 	# #ifdef key == value
 	'''
+	def __init__(self):
+		self._tag = "#ifdef"
+		self._tag_length = len(self._tag)
+	
+	def getExpressResult(self,src):
+		line = src.next
+		index = line.find(self._tag)
+		express = line[index + self._tag_length:]
+		or_express_list = express.split("or")
+		or_result = False
+		for and_express in or_express_list:
+			and_express_list = and_express.split("and")
+			and_result = True
+			for express in and_express_list:
+				express = express.strip()
+				parser = ExpressSelector.getExpressProcessor(express)
+				if parser:
+					result = parser.processExpress(express)
+					if not result:
+						and_result = False
+						break # jump out and loop
+			if and_result:
+				or_result = True
+				break # jump out or loop
+		
+		#print "or_result = %s" % or_result
+		return or_result
+		
 	def doExportProcess(self, src, dest):
 
-		if self._parser:
-			express = self._parser.parseExpress(src.next)
-			if express:
-				if self._parser.checkExpress(express):
-					self.recordIfBlockOnly(src, dest)
-				else:
-					self.recordElseBlockOnly(src, dest)
+		or_result = self.getExpressResult(src)
+		if or_result:
+			self.recordIfBlockOnly(src, dest)
+		else:
+			self.recordElseBlockOnly(src, dest)
 				
 	def recordIfBlockOnly(self, src, dest):
 		while src.hasMore:
@@ -834,14 +864,17 @@ class IfdefProcessor(TagProcessor):
 		
 class IfndefProcessor(IfdefProcessor):
 	
+	def __init__(self):
+		self._tag = "#ifndef"
+		self._tag_length = len(self._tag)
+	
 	def doExportProcess(self, src, dest):
-		if self._parser:
-			express = self._parser.parseExpress(src.next)
-			if express:
-				if not self._parser.checkExpress(express):
-					self.recordIfBlockOnly(src, dest)
-				else:
-					self.recordElseBlockOnly(src, dest)
+		
+		or_result = self.getExpressResult(src)
+		if not or_result:
+			self.recordIfBlockOnly(src, dest)
+		else:
+			self.recordElseBlockOnly(src, dest)
 
 class IncludeProcessor(TagProcessor):
 	'''
@@ -920,33 +953,8 @@ class TagSelector(object):
 							DefineGlobalProcessor(DefineGlobalFloatParser()),
 							DefineGlobalProcessor(DefineGlobalStringParser()),
 							
-							IfdefProcessor(ValueParser()),
-							IfdefProcessor(BooleanParser()),
-							IfdefProcessor(IntegerParser()),
-							IfdefProcessor(FloatParser()),
-							IfdefProcessor(StringParser()),
-							IfdefProcessor(OnlyKeyParser()),
-							
-							IfdefProcessor(GlobalValueParser()),
-							IfdefProcessor(GlobalBooleanParser()),
-							IfdefProcessor(GlobalIntegerParser()),
-							IfdefProcessor(GlobalFloatParser()),
-							IfdefProcessor(GlobalStringParser()),
-							IfdefProcessor(GlobalOnlyKeyParser()),
-							
-							IfndefProcessor(ValueParser()),
-							IfndefProcessor(BooleanParser()),
-							IfndefProcessor(IntegerParser()),
-							IfndefProcessor(FloatParser()),
-							IfndefProcessor(StringParser()),
-							IfndefProcessor(OnlyKeyParser()),
-							
-							IfndefProcessor(GlobalValueParser()),
-							IfndefProcessor(GlobalBooleanParser()),
-							IfndefProcessor(GlobalIntegerParser()),
-							IfndefProcessor(GlobalFloatParser()),
-							IfndefProcessor(GlobalStringParser()),
-							IfndefProcessor(GlobalOnlyKeyParser()),
+							IfdefProcessor(),
+							IfndefProcessor(),
 							
 							ElseProcessor(),
 							EndifProcessor(),
@@ -962,87 +970,43 @@ class TagSelector(object):
 		
 		__str_pattern_tuple = (
 					# #define bool true
-					"^\\s*(" + comment + ")*\\s+#define\\s+[A-Za-z_]+\\w*\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+[A-Za-z_]+\\w*\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}\\s*$",
 					# #define int 123
-					"^\\s*(" + comment + ")*\\s+#define\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+\\s*$",
 					# #define float 123.4
-					"^\\s*(" + comment + ")*\\s+#define\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+(\\.?\\d+){1}\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+(\\.?\\d+){1}\\s*$",
 					# #define str "hello world"
-					"^\\s*(" + comment + ")*\\s+#define\\s+[A-Za-z_]+\\w*\\s+\".+\"\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+[A-Za-z_]+\\w*\\s+\".+\"\\s*$",
 					
 					# #define global bool true
-					"^\\s*(" + comment + ")*\\s+#define\\s+global\\s+[A-Za-z_]+\\w*\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+global\\s+[A-Za-z_]+\\w*\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}\\s*$",
 					# #define global int 123
-					"^\\s*(" + comment + ")*\\s+#define\\s+global\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+global\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+\\s*$",
 					# #define global float 123.4
-					"^\\s*(" + comment + ")*\\s+#define\\s+global\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+(\\.?\\d+){1}\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+global\\s+[A-Za-z_]+\\w*\\s+[+-]?\\d+(\\.?\\d+){1}\\s*$",
 					# #define global str "hello world"
-					"^\\s*(" + comment + ")*\\s+#define\\s+global\\s+[A-Za-z_]+\\w*\\s+\".+\"\\s*$",
+					"^\\s*" + comment + "\\s*#define\\s+global\\s+[A-Za-z_]+\\w*\\s+\".+\"\\s*$",
 					
-					# #ifdef value1 == value2
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[a-zA-Z_]+\\S+){1}\\s*$",
-					# #ifdef bool == true
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=))+\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}){1}\\s*$",
-					# #ifdef int == 123
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+){1}\\s*$",
-					# #ifdef float == 123.4
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+(\\.\\d+){1}){1}\\s*$",
-					# #ifdef str == "hello world"
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+\".+\"){1}\\s*$",
-					# #ifdef param
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+[A-Za-z_]+\\w*\\s*$",
-					
-					# #ifdef global value1 == value2
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[a-zA-Z_]+\\S+){1}\\s*$",
-					# #ifdef global bool == true
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=))+\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}){1}\\s*$",
-					# #ifdef global int == 123
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+){1}\\s*$",
-					# #ifdef global float == 123.4
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+(\\.\\d+){1}){1}\\s*$",
-					# #ifdef global str == "hello world"
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+\".+\"){1}\\s*$",
-					# #ifdef global param
-					"^\\s*(" + comment + ")*\\s+#ifdef\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
-					
-					# #ifndef value1 == value2
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[a-zA-Z_]+\\S+){1}\\s*$",
-					# #ifndef bool == true
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=))+\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}){1}\\s*$",
-					# #ifndef int == 123
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+){1}\\s*$",
-					# #ifndef float == 123.4
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+(\\.\\d+){1}){1}\\s*$",
-					# #ifndef str == "hello world"
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+\".+\"){1}\\s*$",
-					# #ifndef param
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+[A-Za-z_]+\\w*\\s*$",
-					
-					# #ifndef global value1 == value2
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[a-zA-Z_]+\\S+){1}\\s*$",
-					# #ifndef global bool == true
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=))+\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}){1}\\s*$",
-					# #ifndef global int == 123
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+){1}\\s*$",
-					# #ifndef global float == 123.4
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+(\\.\\d+){1}){1}\\s*$",
-					# #ifndef global str == "hello world"
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*(\\s+((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+\".+\"){1}\\s*$",
-					# #ifndef global param
-					"^\\s*(" + comment + ")*\\s+#ifndef\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
-					
+					# #ifdef
+					"^\\s*" + comment + "+\\s*#ifdef\\s+.+$",
+					# #ifndef
+					"^\\s*" + comment + "+\\s*#ifndef\\s+.+$", 
+
 					# #else
-					"^\\s*(" + comment + ")*\\s+#else\\s*$",
+					"^\\s*" + comment + "\\s*#else\\s*$",
 					# #endif
-					"^\\s*(" + comment + ")*\\s+#endif\\s*$",
+					"^\\s*" + comment + "\\s*#endif\\s*$",
 					# #<< param
-					"^\\s*(" + comment + ")*\\s+#<<\\s+[A-Za-z_]+\\w*\\s*$",
+					"^\\s*" + comment + "\\s*#<<\\s+[A-Za-z_]+\\w*\\s*$",
 					# #<< global param
-					"^\\s*(" + comment + ")*\\s+#<<\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
+					"^\\s*" + comment + "\\s*#<<\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
 					# #include file
-					"^\\s*(" + comment + ")*\\s+#include\\s+\".+\"\\s*$",
+					"^\\s*" + comment + "\\s*#include\\s+\".+\"\\s*$",
 					# #whatever else
-					"^\\s*(" + comment + ")*\\s+#.+\\s*$")
+					"^\\s*" + comment + "\\s*#.+\\s*$"
+					)
+				
+		print len(__str_pattern_tuple)
 				
 		cls.__compile_list = map(lambda x: re.compile(x),__str_pattern_tuple)
 			
@@ -1055,6 +1019,51 @@ class TagSelector(object):
 			if c.match(sample):
 				#print " %s ========>> match" % sample.rstrip("\r\n\t ")
 				return cls.__tag_processors_tuple[index]
+		return None
+	
+		
+	def showPatterns(self):
+		print self.__class__.__compile_list
+
+#############################################################
+#
+# Define express selector
+#
+#############################################################
+
+class ExpressSelector(object):
+
+	"""This is a tag selector. It can return a tag processor with a sample string"""
+	__express_processors_tuple = (
+							
+							BooleanParser(),
+							IntegerParser(),
+							FloatParser(),
+							StringParser(),
+							ValueParser(),
+							OnlyKeyParser(),
+							)
+		
+	__str_pattern_tuple = (
+							
+							"(global\\s+)?[A-Za-z_]+\\w*\\s+(((==)|(!=))+\\s+((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1})$",
+							"(global\\s+)?[A-Za-z_]+\\w*\\s+(((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+)$",
+							"(global\\s+)?[A-Za-z_]+\\w*\\s+(((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+[+-]?\\d+(\\.\\d+){1})$",
+							"(global\\s+)?[A-Za-z_]+\\w*\\s+(((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+\".+\")$",
+							"(global\\s+)?[A-Za-z_]+\\w*\\s+(((==)|(!=)|(<=)|(>=)|(<)|(>)){1}\\s+(global\\s+)?[a-zA-Z_]+\\w*)$",
+							"(global\\s+)?[A-Za-z_]+\\w*$",
+						)
+								
+	__compile_list = map(lambda x: re.compile(x),__str_pattern_tuple)
+			
+	@classmethod
+	def getExpressProcessor(cls, sample):
+
+		for index,c in enumerate(cls.__compile_list):
+			
+			if c.match(sample):
+				#print " %s ========>> match" % sample.rstrip("\r\n\t ")
+				return cls.__express_processors_tuple[index]
 		return None
 	
 		

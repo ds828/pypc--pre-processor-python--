@@ -64,8 +64,8 @@
 	//	#endif
 
 /* test int == string */
-	//	#define VALUE1 12
-	//	#define VALUE2 "a13"
+	//	#define VALUE1 "03"
+	//	#define VALUE2 "13"
 	//	#ifdef VALUE1 < VALUE2
 		if block: You should see me
 	//	#<< VALUE1
