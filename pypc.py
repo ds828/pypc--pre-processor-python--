@@ -1002,7 +1002,7 @@ class TagSelector(object):
 					"^\\s*" + comment + "\\s*#<<\\s+[A-Za-z_]+\\w*\\s*$",
 					# #<< global param
 					"^\\s*" + comment + "\\s*#<<\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
-					# #include file
+					# #include "file"
 					"^\\s*" + comment + "\\s*#include\\s+\".+\"\\s*$",
 					# #whatever else
 					"^\\s*" + comment + "\\s*#.+\\s*$"
@@ -1013,11 +1013,10 @@ class TagSelector(object):
 	@classmethod
 	def getTagProcessor(cls, sample):
 
-		
 		for index,c in enumerate(cls.__compile_list):
-			
+			sample = sample.rstrip("\r\n\t ")
 			if c.match(sample):
-				#print " %s ========>> match" % sample.rstrip("\r\n\t ")
+				#print " %s ========>> match" % sample
 				return cls.__tag_processors_tuple[index]
 		return None
 	
