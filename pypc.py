@@ -783,10 +783,10 @@ class IfdefProcessor(TagProcessor):
 	
     def getExpressResult(self,src):
         line = src.next
-        or_express_list = filter(filter_or, line[ line.find(self._tag) + self._tag_length: ].strip().split())
+        or_express_list = line[ line.find(self._tag) + self._tag_length: ].strip().split(" or ")
         or_result = False
         for and_express in or_express_list:
-            and_express_list = filter(filter_and, and_express.split())
+            and_express_list = and_express.split(" and ")
             and_result = True
             for express in and_express_list:
                 express = express.strip("\r\n\t ")
@@ -1116,12 +1116,13 @@ class SyntaxCheck(object):
     def __check_ifdef_ifndef(self,token):
         
         if "#ifdef" in self.__current_line:
-            or_express_list = filter(filter_or, self.__current_line[self.__current_line.find("#ifdef") + 6:].split())
+            or_express_list = self.__current_line[ self.__current_line.find("#ifdef") + 6: ].split(" or ")
+
         elif "#ifndef" in self.__current_line:
-            or_express_list = filter(filter_or, self.__current_line[self.__current_line.find("#ifndef") + 7:].split())
+            or_express_list = self.__current_line[ self.__current_line.find("#ifndef") + 7: ].split(" or ")
 	
         for and_express in or_express_list:
-            express_list = filter(filter_and, and_express.split())
+            express_list = and_express.split(" and ")
             for express in express_list:
                 express = express.strip("\r\n\t ")
                 if not ExpressSelector.getExpressProcessor(express):
