@@ -526,7 +526,7 @@ class OnlyKeyParser(Parser):
             if express.startswith("global") and len(express_list) == 2:
                 """ global key"""
                 express_list = express_list[1:]
-                """now, key"""
+                """now,pypc_doc key"""
                 key = express_list[0]
                 value = ContextManager().getGlobalDefine(key)
 				

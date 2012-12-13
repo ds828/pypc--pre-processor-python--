@@ -1,7 +1,8 @@
 	# #define my_string "Hello pypc"
-	# #ifdef my_string
+	# #ifdef global tstore
                if block: your codes or something
 	# #<< my_string
+	# #<< tstore
 	# #else
 	       else block: your codes or somthing
 	# #endif
