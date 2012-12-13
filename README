@@ -34,7 +34,7 @@ After preprocessing, we can get the code below:
 
     Command Line:
 
-    python pypc.py -s srcfile [-d destdir [-e [-i initfile [-m comment ]]]]
+    python pypc.py -s srcfile [-d destdir [-r -e [-i initfile [-m comment ]]]]
 
         -s Source file or directory.
         -d Destination file or directory.
