@@ -172,16 +172,7 @@ def isString(value):
 _compile_bool = re.compile(r"((true)|(True)|(TRUE)|(false)|(False)|(FALSE)){1}")
 def isBool(value):
     return _compile_bool.match(value)
-	
-def filter_or(token):
-    if token.lower() == "or":
-        return False
-    return True
 
-def filter_and(token):
-    if token.lower() == "and":
-        return False
-    return True
 ############################################################
 #
 # Define a base class for Parser
@@ -692,7 +683,7 @@ class TagProcessor(object):
             self.doExportProcess(src, dest)
         else:
             self.doNonExportProcess(src, dest)
-	
+
     def doNonExportProcess(self, src, dest):
         dest.write(src.next)
         self.doExportProcess(src, dest)
@@ -807,13 +798,14 @@ class IfdefProcessor(TagProcessor):
 		
     def doExportProcess(self, src, dest):
 
-        or_result = self.getExpressResult(src)
-        if or_result:
+        result = self.getExpressResult(src)
+        if result:
             self.recordIfBlockOnly(src, dest)
         else:
             self.recordElseBlockOnly(src, dest)
 				
     def recordIfBlockOnly(self, src, dest):
+        
         while src.hasMore:
             line = src.next
             p = TagSelector.getTagProcessor(line)
@@ -830,6 +822,7 @@ class IfdefProcessor(TagProcessor):
                 dest.write(line)
 	
     def recordElseBlockOnly(self, src, dest):
+        
         export = ContextManager().export
         comment = ContextManager().comment
         count_if = 1
@@ -856,7 +849,7 @@ class IfdefProcessor(TagProcessor):
 					
             elif not export:
                 dest.write("%s %s" % (comment, line))
-		
+            
 class IfndefProcessor(IfdefProcessor):
 	
     def __init__(self):
@@ -895,22 +888,23 @@ class IncludeProcessor(TagProcessor):
 		
 class OutputProcessor(TagProcessor):
     '''
-	# #<< key
+	Translate   # #<< key
+    into        # #<< key == value
     '''
     def doExportProcess(self, src, dest):
         line = src.next
         express_list = line.split()
         if len(express_list) == 3:
             value = ContextManager().getDefineValue(express_list[2])
-            dest.write(line.replace(express_list[2],str(value)).replace("#<<",express_list[2] + " =="))
+            dest.write("%s == %s\r\n" % (line.rstrip("\r\n\t ") , str(value)))
 
     def doNonExportProcess(self, src, dest):
         self.doExportProcess(src, dest)
 		
 class OutputGlobalProcessor(OutputProcessor):
     '''
-	# #<< global key
-	# GLOBAL key == value
+	Translate   # #<< global key
+	into        # #<< global key == value
     '''
     def doExportProcess(self, src, dest):
         line = src.next
@@ -918,7 +912,7 @@ class OutputGlobalProcessor(OutputProcessor):
         if len(express_list) == 4:
             key = express_list[3]
             value = ContextManager().getGlobalDefine(key)
-            dest.write(line.replace(key,"").replace("global","").replace("#<<","GLOBAL " + key + " == " + str(value)))
+            dest.write("%s == %s\r\n" % (line.rstrip("\r\n\t ") , str(value)))
 	
 class UnknownProcessor(TagProcessor):
     '''
@@ -990,10 +984,15 @@ class TagSelector(object):
                     "^\\s*" + comment + "\\s*#else\\s*$",
                     # #endif
                     "^\\s*" + comment + "\\s*#endif\\s*$",
-                    # #<< param
-                    "^\\s*" + comment + "\\s*#<<\\s+[A-Za-z_]+\\w*\\s*$",
+                    
+                    # #<< param 
+                    # OR
+                    # #<< param == value
+                    "^\\s*" + comment + "\\s*#<<\\s+[A-Za-z_]+\\w*\\s*(\\s+==\\s+.+){0,1}$",
                     # #<< global param
-                    "^\\s*" + comment + "\\s*#<<\\s+global\\s+[A-Za-z_]+\\w*\\s*$",
+                    # OR
+                    # #<< global param == value
+                    "^\\s*" + comment + "\\s*#<<\\s+global\\s+[A-Za-z_]+\\w*\\s*(\\s+==\\s+.+){0,1}$",
                     # #include "file"
                     "^\\s*" + comment + "\\s*#include\\s+\".+\"\\s*$",
                     # #whatever else
@@ -1181,7 +1180,7 @@ class SyntaxCheck(object):
 #
 #############################################################
 
-def do_preprocess(options):
+def do_procedure(options):
 	
     if not os.path.exists(options["srcdir"]):
         raise Exception, "%s does not exist." % options["srcdir"]
@@ -1201,24 +1200,51 @@ def do_preprocess(options):
         _processfile(global_def_fullpath,os.path.join(options["todir"],filename))
     else:
         print "======>> fail to find global file = %s\r\n======>> skip it....going on" % global_def_fullpath
-	
-    _preprocess(options["srcdir"])
+        
+    if options["reverse"]:
+        _reverse(options["srcdir"])
+    else:
+        _preprocess(options["srcdir"])
 
-		
-def _processfile(srcfile, tofile):
+def _reverse(srcfile):
 	
+    cm = ContextManager()
+		
+    if os.path.isdir(srcfile):
+        for file in os.listdir(srcfile):
+            fullpath = os.path.realpath(os.path.join(srcfile,file))
+            #print fullpath
+            if os.path.isfile(fullpath):
+                _reverse(fullpath)
+            else:
+                old_dir = cm.todir
+                new_todir = os.path.join(old_dir, file)
+                #print new_todir
+                if not os.path.exists(new_todir):
+                    os.mkdir(new_todir)
+                cm.todir = new_todir
+                _reverse(fullpath)
+                cm.todir = old_dir
+    else:
+        filename = os.path.basename(srcfile)
+        todir = os.path.join(cm.todir, filename)
+        #do reverse
+        _reversefile(srcfile, todir)
+
+def _reversefile(srcfile, tofile):
+    
     cm = ContextManager()
     if cm.hasFileInDone(srcfile):
         return
 	
-    print '======>> processing src = %s dest = %s' % (srcfile, tofile)
+    print '======>> reversing src = %s dest = %s' % (srcfile, tofile)
 	
     checker = SyntaxCheck(srcfile)
     if not checker.check():
         return
 	
     cm.namespace_of_currentfile = srcfile
-	
+    comment = cm.comment
     src = open(srcfile, "r")
     dest = open(tofile, "w")
     it = FileIterator(src)
@@ -1226,9 +1252,10 @@ def _processfile(srcfile, tofile):
         line = it.next
         p = TagSelector.getTagProcessor(line)
         if p:
-            p.process(it, dest)
-        else:
             dest.write(line)
+        else:
+            dest.write(line.replace(comment, "", 1))
+        
     cm.addFileToDone(srcfile)
     src.close()
     dest.close()
@@ -1260,6 +1287,36 @@ def _preprocess(srcfile):
         _processfile(srcfile, todir)		
         
 		
+	
+def _processfile(srcfile, tofile):
+	
+    cm = ContextManager()
+    if cm.hasFileInDone(srcfile):
+        return
+	
+    print '======>> processing src = %s dest = %s' % (srcfile, tofile)
+	
+    checker = SyntaxCheck(srcfile)
+    if not checker.check():
+        return
+	
+    cm.namespace_of_currentfile = srcfile
+	
+    src = open(srcfile, "r")
+    dest = open(tofile, "w")
+    it = FileIterator(src)
+    while it.hasMore:
+        line = it.next
+        p = TagSelector.getTagProcessor(line)
+        if p:
+            p.process(it, dest)
+        else:
+            dest.write(line)
+    cm.addFileToDone(srcfile)
+    src.close()
+    dest.close()
+    print '======>> done. src = %s ' % srcfile
+
 def usage():
 	
     print """HELP for pypc:
@@ -1274,7 +1331,7 @@ def usage():
 def main():
 	
     try:
-        opts, args = getopt.getopt(sys.argv[1:], "s:d:ei:m:")
+        opts, args = getopt.getopt(sys.argv[1:], "s:d:rei:m:")
 
         if not opts or '-s' not in map(lambda x:x[0],opts):
             usage()
@@ -1290,8 +1347,13 @@ def main():
     options = {
                 "srcdir" : base_dir,
                 "todir"	: os.path.join(base_dir ,"done"),
+                "reverse" : False,
+                "export" : False,
                 "global" : os.path.join(base_dir,"global.def")
             }
+    
+    set_todir = False
+    
     for opt,arg in opts:
 		
         if opt == '-s':
@@ -1301,21 +1363,30 @@ def main():
                 options["srcdir"] = os.path.join(base_dir,arg)
 		
         elif opt == "-d":
+            set_todir = True
             if os.path.isabs(arg):
                 options["todir"] = arg
             else:
                 options["todir"] = os.path.join(base_dir,arg)
+                
+        elif opt == "-r":
+            options["reverse"] = True
+            if not set_todir:
+                options["todir"] = os.path.join(base_dir ,"reversed")
+                
         elif opt == "-e":
             options["export"] = True
+            
         elif opt == "-i":
             if os.path.isabs(arg):
                 options["global"] = arg
             else:
                 options["global"] = os.path.join(base_dir,arg)
+        
         elif opt == "-m":
             options["comment"] = arg
 							
-    do_preprocess(options)
+    do_procedure(options)
 
     return 0
 
